@@ -62,7 +62,14 @@ export default function MarketplacePage() {
       setGigCount(gigs || 0);
       setMyItemCount((myListings || 0) + (myGigs || 0));
 
-      // FETCH UNREAD MESSAGES COUNT
+      setChecking(false);
+    }
+
+    // Separate function just for the badge count so we can call it on focus
+    async function checkUnreadMessages() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
       const { count: unread } = await supabase
         .from("messages")
         .select("*", { count: 'exact', head: true })
@@ -70,11 +77,17 @@ export default function MarketplacePage() {
         .eq("is_read", false);
         
       setUnreadCount(unread || 0);
-
-      setChecking(false);
     }
 
     checkStudent();
+    checkUnreadMessages();
+
+    // Add an event listener to re-check unread messages when the tab regains focus
+    window.addEventListener("focus", checkUnreadMessages);
+
+    return () => {
+      window.removeEventListener("focus", checkUnreadMessages);
+    };
   }, [router]);
 
   async function handleLogout() {
