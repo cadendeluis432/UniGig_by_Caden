@@ -53,7 +53,7 @@ export default function AboutPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" className="bg-[#173B5E] text-white px-6 py-3 rounded-lg font-bold hover:bg-[#2376B9] transition-colors shadow-md hover:-translate-y-1">
+              <a href="https://github.com/cadendeluis432" target="_blank" rel="noopener noreferrer" className="bg-[#173B5E] text-white px-6 py-3 rounded-lg font-bold hover:bg-[#2376B9] transition-colors shadow-md hover:-translate-y-1">
                 GitHub Profile
               </a>
               <Link href="/about/resume" className="bg-white border-2 border-[#173B5E] text-[#173B5E] px-6 py-3 rounded-lg font-bold hover:bg-gray-50 transition-colors shadow-md hover:-translate-y-1">
