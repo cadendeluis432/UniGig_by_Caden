@@ -39,7 +39,7 @@ function ChatRoomContent() {
       setOtherUserName(userDetails[0].display_name);
     }
 
-    // Fetch all messages between the two users
+        // Fetch all messages between the two users
     const { data: msgs } = await supabase
       .from("messages")
       .select("*")
@@ -47,6 +47,14 @@ function ChatRoomContent() {
       .order("created_at", { ascending: true });
 
     setMessages(msgs || []);
+
+    // MARK AS READ: Update any messages sent to me by this user to be 'read'
+    await supabase
+      .from("messages")
+      .update({ is_read: true })
+      .eq("receiver_id", user.id)
+      .eq("sender_id", otherUserId)
+      .eq("is_read", false);
     setLoading(false);
     setTimeout(scrollToBottom, 100);
   };

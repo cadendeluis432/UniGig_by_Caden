@@ -14,6 +14,9 @@ export default function MarketplacePage() {
   const [listingCount, setListingCount] = useState(0);
   const [gigCount, setGigCount] = useState(0);
   const [myItemCount, setMyItemCount] = useState(0);
+  
+  // UNREAD MESSAGES STATE
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     async function checkStudent() {
@@ -59,6 +62,15 @@ export default function MarketplacePage() {
       setGigCount(gigs || 0);
       setMyItemCount((myListings || 0) + (myGigs || 0));
 
+      // FETCH UNREAD MESSAGES COUNT
+      const { count: unread } = await supabase
+        .from("messages")
+        .select("*", { count: 'exact', head: true })
+        .eq("receiver_id", user.id)
+        .eq("is_read", false);
+        
+      setUnreadCount(unread || 0);
+
       setChecking(false);
     }
 
@@ -91,12 +103,21 @@ export default function MarketplacePage() {
           <Link href="/about" className="text-[#173B5E] hover:text-[#2376B9] font-semibold transition-colors px-2 text-sm md:text-base">
             About Us
           </Link>
-          <Link href="/inbox" className="rounded-lg bg-gray-100 text-[#173B5E] px-3 md:px-5 py-2 text-sm md:text-base font-semibold hover:bg-gray-200 hover:-translate-y-0.5 transition-all">
+          
+          {/* INBOX BUTTON WITH BADGE */}
+          <Link href="/inbox" className="relative rounded-lg bg-gray-100 text-[#173B5E] px-3 md:px-5 py-2 text-sm md:text-base font-semibold hover:bg-gray-200 hover:-translate-y-0.5 transition-all">
             Inbox
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-white animate-bounce">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
           </Link>
+
           <Link href="/profile" className="rounded-lg bg-[#EAF6FF] text-[#2376B9] border border-[#B9E0FF] px-3 md:px-5 py-2 text-sm md:text-base font-semibold hover:bg-[#B9E0FF] hover:-translate-y-0.5 transition-all">
             Profile
           </Link>
+          
           <button onClick={handleLogout} className="rounded-lg bg-[#173B5E] px-3 md:px-5 py-2 text-sm md:text-base text-white font-semibold hover:bg-[#2376B9] hover:-translate-y-0.5 transition-all shadow-sm">
             Log Out
           </button>
@@ -120,7 +141,7 @@ export default function MarketplacePage() {
           </div>
         </div>
 
-        {/* Quick Stats Grid (Animated Delay 100) */}
+        {/* Quick Stats Grid */}
         <div className="animate-fade-up delay-100 grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
           
           <div className="bg-white p-5 rounded-2xl shadow-sm text-center border border-gray-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
@@ -143,7 +164,7 @@ export default function MarketplacePage() {
 
         </div>
 
-        {/* Action Cards Grid (Animated Delay 200 & 300) */}
+        {/* Action Cards Grid */}
         <h3 className="animate-fade-up delay-200 text-xl font-bold text-[#173B5E] mb-4">What do you want to do?</h3>
         <div className="animate-fade-up delay-300 grid grid-cols-1 md:grid-cols-2 gap-6">
           
