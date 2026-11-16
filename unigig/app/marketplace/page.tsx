@@ -88,7 +88,7 @@ export default function MarketplacePage() {
         </Link>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <Link href="/about" className="hidden md:block text-[#173B5E] hover:text-[#2376B9] font-semibold transition-colors px-2">
+          <Link href="/about" className="text-[#173B5E] hover:text-[#2376B9] font-semibold transition-colors px-2 text-sm md:text-base">
             About Us
           </Link>
           <Link href="/inbox" className="rounded-lg bg-gray-100 text-[#173B5E] px-3 md:px-5 py-2 text-sm md:text-base font-semibold hover:bg-gray-200 hover:-translate-y-0.5 transition-all">
