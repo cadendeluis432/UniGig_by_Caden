@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
 function ChatRoomContent() {
-  const { id: otherUserId } = useParams(); // The ID of the person we are chatting with
+  const { id: otherUserId } = useParams();
   const router = useRouter();
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
@@ -15,7 +15,6 @@ function ChatRoomContent() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   
-  // Auto-scroll to bottom
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -30,14 +29,15 @@ function ChatRoomContent() {
     }
     setCurrentUserId(user.id);
 
-    // Fetch the other person's name
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("full_name")
-      .eq("id", otherUserId)
-      .single();
-      
-    if (profile?.full_name) setOtherUserName(profile.full_name);
+    // FETCH THE OTHER USER'S NAME (Using the SQL function we created earlier)
+    const { data: userDetails } = await supabase.rpc('get_user_details', {
+      user_ids: [otherUserId]
+    });
+    
+    // If we found their name/email, set it. Otherwise, default to "Student"
+    if (userDetails && userDetails.length > 0) {
+      setOtherUserName(userDetails[0].display_name);
+    }
 
     // Fetch all messages between the two users
     const { data: msgs } = await supabase
@@ -55,7 +55,6 @@ function ChatRoomContent() {
     fetchChat();
   }, [otherUserId, router]);
 
-  // Scroll down when new messages arrive
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -66,7 +65,7 @@ function ChatRoomContent() {
 
     setSending(true);
     const msgText = newMessage;
-    setNewMessage(""); // Clear input immediately for snappy feel
+    setNewMessage(""); 
 
     const { error } = await supabase.from("messages").insert([
       {
@@ -77,11 +76,10 @@ function ChatRoomContent() {
     ]);
 
     if (!error) {
-      // Re-fetch to show the new message
       await fetchChat();
     } else {
       console.error("Failed to send", error);
-      setNewMessage(msgText); // Put text back if it failed
+      setNewMessage(msgText); 
     }
     setSending(false);
   };
@@ -99,6 +97,7 @@ function ChatRoomContent() {
         <div className="w-10 h-10 bg-[#2376B9] text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">
           {otherUserName.charAt(0).toUpperCase()}
         </div>
+        {/* THIS IS WHERE THE NAME SHOWS UP */}
         <h1 className="text-lg font-bold text-[#173B5E]">{otherUserName}</h1>
       </div>
 
