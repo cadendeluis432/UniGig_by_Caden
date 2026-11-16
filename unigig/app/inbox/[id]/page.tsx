@@ -47,6 +47,13 @@ function ChatRoomContent() {
       .order("created_at", { ascending: true });
 
     setMessages(msgs || []);
+     // MARK AS READ
+    await supabase
+      .from("messages")
+      .update({ is_read: true })
+      .eq("receiver_id", user.id)
+      .eq("sender_id", otherUserId)
+      .eq("is_read", false);
 
     // MARK AS READ: Update any messages sent to me by this user to be 'read'
     await supabase
