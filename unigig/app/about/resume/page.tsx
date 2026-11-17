@@ -89,7 +89,7 @@ export default function ResumePage() {
         
         {/* Footer */}
         <p className="text-center text-gray-500 text-sm mt-8">
-          &copy; 2026 Caden Charlton Eztalosa De luis. Built for Web Programming Final Project.
+          &copy; 2026 Caden Charlton Estaloza De luis. Built for Web Programming Final Project.
         </p>
 
       </div>

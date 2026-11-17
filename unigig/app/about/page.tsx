@@ -42,7 +42,7 @@ export default function AboutPage() {
             </div>
 
             <h3 className="text-2xl md:text-3xl font-extrabold mb-2 text-[#173B5E]">
-              Caden Charlton Eztalosa De luis
+              Caden Charlton Estaloza De luis
             </h3>
             <p className="text-[#2376B9] font-bold text-lg mb-4">
               Lead Developer
